@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 
 
-def getImagesSourceByPage(url: str, page: int):
-    wallpapersListPage = requests.get(url % (page))
+def getImagesSourceByPage(page: int):
+    wallpapersListPage = requests.get(wallpapersListUrl % (page))
     wallpapersListSoup = BeautifulSoup(
         wallpapersListPage.content, 'html.parser')
 
@@ -47,12 +47,13 @@ def dowloadImageWithSrc(ImgSrcUrl: str):
 
 def main():
     global processedNumber
-    processedNumber = 0
     global folderName
-    folderName = 'dist/spaceWallpapers'
     global downloadWallperUrl
-    downloadWallperUrl = 'https://images.hdqwalls.com/download/%s'
+    global wallpapersListUrl
 
+    processedNumber = 0
+    folderName = 'dist/spaceWallpapers'
+    downloadWallperUrl = 'https://images.hdqwalls.com/download/%s'
     wallpapersListUrl = 'https://hdqwalls.com/2560x1440/space-wallpapers/page/%d'
 
     Path(folderName).mkdir(parents=True, exist_ok=True)
@@ -66,7 +67,7 @@ def main():
 
     for i in range(max_pages):
         # GET IMAGES SRC
-        imagesSrc = getImagesSourceByPage(wallpapersListUrl, i)
+        imagesSrc = getImagesSourceByPage(i)
 
         # DOWNLOAD PICTURE
         for imageSrc in imagesSrc:
